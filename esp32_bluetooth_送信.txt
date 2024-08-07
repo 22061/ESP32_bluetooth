@@ -1,0 +1,47 @@
+#include "BluetoothSerial.h"
+
+BluetoothSerial SerialBT;
+
+String device_name = "ESP32test";
+uint8_t address[6]  = {0xA8, 0x42, 0xE3, 0xA9, 0x91, 0x26};
+bool connected;
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial)
+  {
+    delay(100);
+  }
+  SerialBT.begin(device_name, true); 
+  Serial.println("device start");
+  
+  connected = SerialBT.connect(address);
+  if(connected) {
+    Serial.println("Connect OK");
+  } else {
+    while(!SerialBT.connected(10000)) {
+      Serial.println("No connect"); 
+    }
+  }
+  
+  if (SerialBT.disconnect()) {
+    Serial.println("Disconnected Succesfully!");
+  }
+
+  SerialBT.connect();
+
+  pinMode(15, INPUT_PULLUP);
+
+}
+
+void loop() {
+  if (digitalRead(15) == LOW) {
+    Serial.println("LED is ON.");
+    SerialBT.write('T');
+  }
+  if (digitalRead(15) == HIGH) {
+    Serial.println("LED is OFF.");
+    SerialBT.write('L');
+  }
+  delay(20);
+}
