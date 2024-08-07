@@ -1,0 +1,24 @@
+#include "esp_mac.h"
+
+void setup() {
+  Serial.begin(115200);
+  delay(2000);
+
+  String mac = "";
+  unsigned char mac_base[6] = {0};
+
+  if (esp_read_mac(mac_base, ESP_MAC_BT) == ESP_OK) 
+  {
+    char buffer[18];
+    sprintf(buffer, "%02X:%02X:%02X:%02X:%02X:%02X", mac_base[0], mac_base[1], mac_base[2], mac_base[3], mac_base[4], mac_base[5]);
+    mac = buffer;
+  }
+
+  Serial.println("Interface\tMAC address");
+  Serial.print("Bluetooth\t");
+  Serial.println(mac);
+}
+
+void loop() {
+
+}
